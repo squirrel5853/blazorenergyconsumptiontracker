@@ -1,0 +1,68 @@
+﻿@page "/"
+@using energyconsumptiontracker.Application.Models
+@using meterreadingapi.Data
+@inject MeterReadingController MeterReadingController
+
+<PageTitle>Meter readings</PageTitle>
+
+<h1>Meter readings</h1>
+
+@if (meterReadings == null)
+{
+    <p><em>awaiting upload...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Reading Value</th>
+                <th>AccountId</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var reading in meterReadings)
+            {
+                <tr>
+                    <td>@reading.ReadingDate.ToShortDateString()</td>
+                    <td>@reading.ReadingValue</td>
+                    <td>@reading.AccountId</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<div class="container-lg">
+    <div class="col-6">
+        <InputFile OnChange="ProcessFile" />
+    </div>
+    <div class="col-6">
+        <button @onclick="SubmitMeterReadings">Submit Meter Readings</button>
+    </div>
+</div>
+
+@code {
+    private MeterReading[]? meterReadings;
+
+    protected override async Task OnInitializedAsync()
+    {
+        //meterReadings = await MeterReadingController.GetMeterReadingsAsync(DateTime.UtcNow);
+    }
+
+    protected async Task SubmitMeterReadings() 
+    {
+        if (meterReadings != null)
+        {
+            await MeterReadingController.PostMeterReadings(meterReadings);
+            StateHasChanged();
+        }
+    }
+
+    private async Task ProcessFile(InputFileChangeEventArgs args)
+    {
+        meterReadings = await MeterReadingController.CreateMeterReadingFromCsv(args.File);
+        StateHasChanged();
+    }
+}
