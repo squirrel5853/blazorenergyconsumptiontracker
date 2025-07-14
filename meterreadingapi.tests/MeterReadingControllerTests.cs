@@ -1,6 +1,6 @@
 ﻿using energyconsumptiontracker.Application.DataImport;
 using energyconsumptiontracker.Application.Models;
-using meterreadingapi.Data;
+using meterreadingapi.Services;
 using Moq;
 
 namespace meterreadingapi.tests
@@ -9,14 +9,14 @@ namespace meterreadingapi.tests
     {
         private Mock<ICsvFileProcessor> _csvFileProcessorMock;
         private Mock<IMeterReadingPersistence> _persistenceMock;
-        private MeterReadingController _controller;
+        private MeterReadingService _controller;
 
         [SetUp]
         public void SetUp()
         {
             _csvFileProcessorMock = new Mock<ICsvFileProcessor>();
             _persistenceMock = new Mock<IMeterReadingPersistence>();
-            _controller = new MeterReadingController(_csvFileProcessorMock.Object, _persistenceMock.Object);
+            _controller = new MeterReadingService(_csvFileProcessorMock.Object, _persistenceMock.Object);
         }
 
         [Test]

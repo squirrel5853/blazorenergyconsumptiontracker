@@ -2,14 +2,14 @@ using energyconsumptiontracker.Application.DataImport;
 using energyconsumptiontracker.Application.Models;
 using Microsoft.AspNetCore.Components.Forms;
 
-namespace meterreadingapi.Data;
+namespace meterreadingapi.Services;
 
-public class MeterReadingController
+public class MeterReadingService
 {
     private readonly ICsvFileProcessor _csvFileProcessor;
     private readonly IMeterReadingPersistence _meterReadingPersistence;
 
-    public MeterReadingController(ICsvFileProcessor csvFileProcessor, IMeterReadingPersistence meterReadingPersistence)
+    public MeterReadingService(ICsvFileProcessor csvFileProcessor, IMeterReadingPersistence meterReadingPersistence)
     {
         _csvFileProcessor = csvFileProcessor;
         _meterReadingPersistence = meterReadingPersistence;
@@ -30,11 +30,17 @@ public class MeterReadingController
         await _meterReadingPersistence.StoreMeterReadings(meterReadings);
     }
 
+
     public async Task<MeterReading[]> CreateMeterReadingFromCsv(IBrowserFile browserFile)
+    {
+        return await CreateMeterReadingFromStream(browserFile.OpenReadStream(maxAllowedSize: 10_000_000));
+    }
+
+    internal async Task<MeterReading[]> CreateMeterReadingFromStream(Stream stream)
     {
         try
         {
-            var meterReadings = await _csvFileProcessor.ProcessCsvFile(browserFile.OpenReadStream(maxAllowedSize: 10_000_000));
+            var meterReadings = await _csvFileProcessor.ProcessCsvFile(stream);
             return meterReadings;
         }
         catch (Exception ex)
