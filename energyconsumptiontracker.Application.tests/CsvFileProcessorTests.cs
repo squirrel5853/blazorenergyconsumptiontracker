@@ -22,7 +22,7 @@ namespace energyconsumptiontracker.Application.tests
             var processor = new CsvFileProcessor();
 
             // Act
-            MeterReading[] result = await processor.ProcessCsvFile(stream);
+            MeterReadingDto[] result = await processor.ProcessCsvFile(stream);
 
             // Assert
             Assert.That(result != null);

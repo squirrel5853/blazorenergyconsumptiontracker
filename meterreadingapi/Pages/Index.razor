@@ -1,8 +1,9 @@
 ﻿@page "/"
 @using energyconsumptiontracker.Application.Models
 @using meterreadingapi.Api
-@using meterreadingapi.Services
-@inject MeterReadingService MeterReadingController
+@using meterreadingapi.Controllers
+
+@inject MeterReadingController MeterReadingController
 
 <PageTitle>Meter readings</PageTitle>
 
@@ -45,7 +46,7 @@ else
 </div>
 
 @code {
-    private MeterReading[]? meterReadings;
+    private MeterReadingDto[]? meterReadings;
 
     protected override async Task OnInitializedAsync()
     {

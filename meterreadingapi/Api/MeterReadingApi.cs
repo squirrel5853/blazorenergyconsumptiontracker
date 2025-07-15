@@ -1,4 +1,4 @@
-using meterreadingapi.Services;
+using meterreadingapi.Controllers;
 using Microsoft.AspNetCore.Mvc;
 
 namespace meterreadingapi.Api;
@@ -7,9 +7,9 @@ namespace meterreadingapi.Api;
 [Route("api/meterreading")]
 public class MeterReadingApi : ControllerBase
 {
-    private MeterReadingService _meterReadingController;
+    private MeterReadingController _meterReadingController;
 
-    public MeterReadingApi(MeterReadingService meterReadingController)
+    public MeterReadingApi(MeterReadingController meterReadingController)
     {
         _meterReadingController = meterReadingController;
     }

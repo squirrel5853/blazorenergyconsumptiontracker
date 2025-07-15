@@ -1,5 +1,8 @@
 using energyconsumptiontracker.Application.DataImport;
-using meterreadingapi.Services;
+using energyconsumptiontracker.Domain;
+using energyconsumptiontracker.Persistence;
+using meterreadingapi.Controllers;
+using Microsoft.EntityFrameworkCore;
 
 namespace meterreadingapi
 {
@@ -15,13 +18,21 @@ namespace meterreadingapi
             builder.Services.AddControllers();
 
             // blazor frontend integration
-            builder.Services.AddScoped<MeterReadingService>();
+            builder.Services.AddScoped<MeterReadingController>();
 
             // Application layer
-            builder.Services.AddSingleton<ICsvFileProcessor, CsvFileProcessor>();
+            builder.Services.AddScoped<ICsvFileProcessor, CsvFileProcessor>();
 
             //persistence layer
-            builder.Services.AddSingleton<IMeterReadingPersistence, MeterReadingPersistence>();
+            builder.Services.AddScoped<IMeterReadingPersistence, MeterReadingPersistence>();
+            builder.Services.AddScoped<ICustomerAccountPersistence, CustomerAccountPersistence>();
+
+            builder.Services.AddScoped<DatabaseSeeder>();
+
+            builder.Services.AddDbContext<MeterReadingDbContext>(options =>
+                options.UseSqlite("Data Source=meterreadings.db"));
+
+            SQLitePCL.Batteries.Init();
 
             var app = builder.Build();
 
@@ -51,6 +62,18 @@ namespace meterreadingapi
 
             app.MapBlazorHub();
             app.MapFallbackToPage("/_Host");
+
+            //intialise data
+            using (var scope = app.Services.CreateScope())
+            {
+                var db = scope.ServiceProvider.GetRequiredService<MeterReadingDbContext>();
+                db.Database.EnsureCreated();
+
+                var seeder = scope.ServiceProvider.GetRequiredService<DatabaseSeeder>();
+
+                var csvPath = Path.Combine(Directory.GetCurrentDirectory(), "test_accounts.csv");
+                seeder.SeedAsync(csvPath).Wait();
+            }
 
             app.Run();
         }

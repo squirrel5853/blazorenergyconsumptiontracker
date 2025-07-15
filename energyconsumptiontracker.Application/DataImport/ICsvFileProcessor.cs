@@ -4,6 +4,8 @@ namespace energyconsumptiontracker.Application.DataImport
 {
     public interface ICsvFileProcessor
     {
-        Task<MeterReading[]> ProcessCsvFile(Stream stream);
+        Task<MeterReadingDto[]> ProcessCsvFile(Stream stream);
+
+        Task<AccountDto[]> ProcessAccountCsvFile(Stream stream);
     }
 }

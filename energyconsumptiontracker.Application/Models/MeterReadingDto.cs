@@ -1,6 +1,6 @@
 namespace energyconsumptiontracker.Application.Models;
 
-public class MeterReading
+public class MeterReadingDto
 {
     public int AccountId { get; set; }
     public DateTime ReadingDate { get; set; }

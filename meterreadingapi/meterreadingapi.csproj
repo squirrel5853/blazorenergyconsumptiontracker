@@ -9,6 +9,13 @@
   <ItemGroup>
     <ProjectReference Include="..\energyconsumptiontracker.Application\energyconsumptiontracker.Application.csproj" />
     <ProjectReference Include="..\energyconsumptiontracker.Domain\energyconsumptiontracker.Application.csproj" />
+    <ProjectReference Include="..\energyconsumptiontracker.Persistence\energyconsumptiontracker.Persistence.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="test-accounts.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

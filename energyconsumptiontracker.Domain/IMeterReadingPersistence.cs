@@ -1,6 +1,4 @@
-﻿using energyconsumptiontracker.Application.Models;
-
-namespace meterreadingapi.Services;
+﻿namespace energyconsumptiontracker.Domain;
 
 public interface IMeterReadingPersistence
 {
