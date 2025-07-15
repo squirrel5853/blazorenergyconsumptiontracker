@@ -23,6 +23,9 @@ namespace meterreadingapi
             // Application layer
             builder.Services.AddScoped<ICsvFileProcessor, CsvFileProcessor>();
 
+            //domain layer
+            builder.Services.AddScoped<IMeterReadingService, MeterReadingService>();
+
             //persistence layer
             builder.Services.AddScoped<IMeterReadingPersistence, MeterReadingPersistence>();
             builder.Services.AddScoped<ICustomerAccountPersistence, CustomerAccountPersistence>();
@@ -71,7 +74,7 @@ namespace meterreadingapi
 
                 var seeder = scope.ServiceProvider.GetRequiredService<DatabaseSeeder>();
 
-                var csvPath = Path.Combine(Directory.GetCurrentDirectory(), "test_accounts.csv");
+                var csvPath = Path.Combine(Directory.GetCurrentDirectory(), "test-accounts.csv");
                 seeder.SeedAsync(csvPath).Wait();
             }
 

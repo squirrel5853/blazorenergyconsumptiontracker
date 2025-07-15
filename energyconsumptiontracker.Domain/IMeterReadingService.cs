@@ -2,5 +2,6 @@
 
 public interface IMeterReadingService
 {
-    public Task ProcessMeterReadings(IEnumerable<MeterReading> meterReadings);
+    Task ClearMeterReadings();
+    Task<StoreResult> StoreMeterReadings(MeterReading[] meterReadings);
 }

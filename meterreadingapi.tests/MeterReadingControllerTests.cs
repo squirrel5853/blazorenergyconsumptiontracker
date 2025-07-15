@@ -9,15 +9,15 @@ namespace meterreadingapi.tests
     public class MeterReadingControllerTests
     {
         private Mock<ICsvFileProcessor> _csvFileProcessorMock;
-        private Mock<IMeterReadingPersistence> _persistenceMock;
+        private Mock<IMeterReadingService> _serviceMock;
         private MeterReadingController _controller;
 
         [SetUp]
         public void SetUp()
         {
             _csvFileProcessorMock = new Mock<ICsvFileProcessor>();
-            _persistenceMock = new Mock<IMeterReadingPersistence>();
-            _controller = new MeterReadingController(_csvFileProcessorMock.Object, _persistenceMock.Object);
+            _serviceMock = new Mock<IMeterReadingService>();
+            _controller = new MeterReadingController(_csvFileProcessorMock.Object, _serviceMock.Object);
         }
 
         [Test]
@@ -33,7 +33,7 @@ namespace meterreadingapi.tests
             await _controller.PostMeterReadings(meterReadingDTOs);
 
             // Assert
-            _persistenceMock.Verify(p => p.StoreMeterReadings(It.IsAny<MeterReading[]>()), Times.Once);
+            _serviceMock.Verify(p => p.StoreMeterReadings(It.IsAny<MeterReading[]>()), Times.Once);
         }
     }
 }

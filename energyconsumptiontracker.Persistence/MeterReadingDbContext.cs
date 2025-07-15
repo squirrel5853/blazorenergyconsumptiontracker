@@ -21,7 +21,9 @@ namespace energyconsumptiontracker.Persistence
 
         private void ConfigureMeterReadingEntityType(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<MeterReading>().HasNoKey();
+            modelBuilder.Entity<MeterReading>().HasKey(x => x.Id);
+            modelBuilder.Entity<MeterReading>().HasIndex(x => x.AccountId);
+            modelBuilder.Entity<MeterReading>().HasIndex(x => new { x.MeterReadingDate, x.AccountId }).IsUnique();
         }
 
         private void ConfigureCustomerAccountEntityType(ModelBuilder modelBuilder)

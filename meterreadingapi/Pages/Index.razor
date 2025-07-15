@@ -36,6 +36,14 @@ else
     </table>
 }
 
+@if (storeResult != null)
+{
+    <div class="conainer-lg">
+        <div class="col-6"><div class="alert-success">Successful Records Stored: @storeResult.SuccessCount</div></div>
+        <div class="col-6"><div class="alert-danger">Failed Records Stored: @storeResult.FailureCount</div></div>
+    </div>
+}
+
 <div class="container-lg">
     <div class="col-6">
         <InputFile OnChange="ProcessFile" />
@@ -47,6 +55,7 @@ else
 
 @code {
     private MeterReadingDto[]? meterReadings;
+    private StoreResultDto? storeResult;
 
     protected override async Task OnInitializedAsync()
     {
@@ -57,7 +66,7 @@ else
     {
         if (meterReadings != null)
         {
-            await MeterReadingController.PostMeterReadings(meterReadings);
+            storeResult = await MeterReadingController.PostMeterReadings(meterReadings);
             StateHasChanged();
         }
     }

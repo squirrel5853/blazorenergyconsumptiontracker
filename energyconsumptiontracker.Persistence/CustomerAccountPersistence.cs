@@ -11,6 +11,11 @@ public class CustomerAccountPersistence : ICustomerAccountPersistence
         _context = context;
     }
 
+    public async Task<List<CustomerAccount>> GetCustomersByIds(int[] accountIds)
+    { 
+        return await _context.Customers.Where(x => accountIds.Contains(x.AccountId)).ToListAsync();
+    }
+
     public async Task StoreCustomerAccounts(CustomerAccount[] customerAccounts)
     {
         await _context.Customers.AddRangeAsync(customerAccounts);

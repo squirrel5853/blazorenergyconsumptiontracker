@@ -6,3 +6,6 @@
 */.vs/
 */bin
 */obj
+/meterreadingapi/meterreadings.db
+/meterreadingapi/meterreadings.db-shm
+/meterreadingapi/meterreadings.db-wal

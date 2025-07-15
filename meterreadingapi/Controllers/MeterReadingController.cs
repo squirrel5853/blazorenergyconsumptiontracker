@@ -8,12 +8,12 @@ namespace meterreadingapi.Controllers;
 public class MeterReadingController
 {
     private readonly ICsvFileProcessor _csvFileProcessor;
-    private readonly IMeterReadingPersistence _meterReadingPersistence;
+    private readonly IMeterReadingService _meterReadingService;
 
-    public MeterReadingController(ICsvFileProcessor csvFileProcessor, IMeterReadingPersistence meterReadingPersistence)
+    public MeterReadingController(ICsvFileProcessor csvFileProcessor, IMeterReadingService meterReadingService)
     {
         _csvFileProcessor = csvFileProcessor;
-        _meterReadingPersistence = meterReadingPersistence;
+        _meterReadingService = meterReadingService;
     }
 
     public Task<MeterReadingDto[]> GetMeterReadingsAsync(DateTime startDate)
@@ -26,7 +26,7 @@ public class MeterReadingController
         }).ToArray());
     }
 
-    public async Task PostMeterReadings(MeterReadingDto[] meterReadingDTOs)
+    public async Task<StoreResultDto> PostMeterReadings(MeterReadingDto[] meterReadingDTOs)
     {
         List<MeterReading> meterReadings = new List<MeterReading>();
         foreach (var item in meterReadingDTOs)
@@ -34,12 +34,13 @@ public class MeterReadingController
             meterReadings.Add(new MeterReading()
             {
                 Id = Guid.NewGuid(),
-                CustomerAccount = new CustomerAccount(item.AccountId),
+                AccountId = item.AccountId,
                 MeterReadingDate = item.ReadingDate,
                 MeterReadingValue = item.ReadingValue
             });
         }
-        await _meterReadingPersistence.StoreMeterReadings(meterReadings.ToArray());
+        var storeResult = await _meterReadingService.StoreMeterReadings(meterReadings.ToArray());
+        return new StoreResultDto() { SuccessCount = storeResult.SuccessCount, FailureCount = storeResult.FailureCount };
     }
 
 
@@ -60,5 +61,10 @@ public class MeterReadingController
             Console.WriteLine(ex.Message);
         }
         return Array.Empty<MeterReadingDto>();
+    }
+
+    public async Task ResetMeterReadings()
+    {
+        await _meterReadingService.ClearMeterReadings();
     }
 }

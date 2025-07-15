@@ -25,7 +25,15 @@ public class MeterReadingApi : ControllerBase
         using var stream = file.OpenReadStream();
 
         var meterReadings = await _meterReadingController.CreateMeterReadingFromStream(stream);
-        await _meterReadingController.PostMeterReadings(meterReadings);
+        var result = await _meterReadingController.PostMeterReadings(meterReadings);
+
+        return new OkObjectResult(result);
+    }
+
+    [HttpDelete("meter-readings-clear")]
+    public async Task<IActionResult> Reset()
+    { 
+        await _meterReadingController.ResetMeterReadings();
 
         return new OkResult();
     }

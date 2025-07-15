@@ -1,5 +1,6 @@
 ﻿using energyconsumptiontracker.Domain;
 using energyconsumptiontracker.Persistence;
+using Microsoft.EntityFrameworkCore;
 
 public class MeterReadingPersistence : IMeterReadingPersistence
 {
@@ -8,6 +9,13 @@ public class MeterReadingPersistence : IMeterReadingPersistence
     public MeterReadingPersistence(MeterReadingDbContext context)
     {
         _context = context;
+    }
+
+    public async Task Clear()
+    {
+        var readings = await _context.MeterReadings.ToArrayAsync();
+        _context.MeterReadings.RemoveRange(readings);
+        await _context.SaveChangesAsync();
     }
 
     public async Task StoreMeterReadings(MeterReading[] meterReadings)

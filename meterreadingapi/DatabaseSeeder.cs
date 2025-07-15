@@ -36,7 +36,11 @@ internal class DatabaseSeeder
                 accounts.Add(new CustomerAccount(item.Id));
             }
 
-            await _customerAccountPersistence.StoreCustomerAccounts(accounts.ToArray());
+            var existingCusomers = await _customerAccountPersistence.GetCustomersByIds(accounts.Select(x => x.AccountId).ToArray());
+
+            var accountsToAdd = accounts.Where(a => !existingCusomers.Any(c => c.AccountId == a.AccountId));
+
+            await _customerAccountPersistence.StoreCustomerAccounts(accountsToAdd.ToArray());
         }
         else
         {
